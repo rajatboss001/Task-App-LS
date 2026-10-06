@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+        @theme {
+        --color-of-white: #F7F7F7;
+        --color-electric-blue: #128DFF;
+        --color-royal-blue: #1444EF;
+        --color-gray: #808080;
+
+        --leading-150: 150%;
+        --leading-100: 100%;
+    }
+</style>
+</head>
+
+<body>
+    <section class="min-h-[100vh] flex justify-center items-center">
+        <div class="container max-w-[540px] w-full mx-auto">
+            <h1 class="font-normal text-3xl leading-100 text-gray text-center mb-[43px]">Task App</h1>
+            <div class="todo p-[23px_21px_28px_21px] shadow-[0px_11px_44px_-10px_#00000040] bg-white rounded-[20px]">
+                <div class="w-full flex gap-2 border border-black/10 justify-between p-[7px_8px_7px_10px]">
+                    <input class="font-normal w-full outline-none text-base leading-100" type="text" id="taskInput"
+                        placeholder="Enter task">
+                    <button
+                        class="font-semibold cursor-pointer min-w-[140px] py-[13px] px-[34px] rounded-md text-white bg-[linear-gradient(97.42deg,var(--color-electric-blue)_-4.95%,var(--color-royal-blue)_109.04%)] text-base leading-100"
+                        id="addBtn">Add Task</button>
+                </div>
+                <p class="pt-[27px] pb-[9px] font-normal text-base leading-100 text-black/50">Today’s tasks</p>
+                <ul class="flex flex-col gap-1" id="taskList"></ul>
+            </div>
+        </div>
+    </section>
+
+
+    <script>
+        const taskInput = document.getElementById("taskInput");
+        const addBtn = document.getElementById("addBtn");
+        const taskList = document.getElementById("taskList");
+
+        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+        function showTasks() {
+            taskList.innerHTML = "";
+
+            tasks.forEach((task, index) => {
+                taskList.innerHTML += `
+            <li class="py-[22px] px-[19px] font-normal hover:shadow-[0px_5px_17px_0px_#0000001A] transition-all duration-300 rounded-[5px] text-base leading-100 border border-black/10 flex justify-between">
+                ${task}
+                <button Class="w-6 h-6 flex justify-center items-center cursor-pointer" onclick="deleteTask(${index})"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g opacity="0.5">
+<path d="M5 20C5 20.5304 5.21071 21.0391 5.58579 21.4142C5.96086 21.7893 6.46957 22 7 22H17C17.5304 22 18.0391 21.7893 18.4142 21.4142C18.7893 21.0391 19 20.5304 19 20V8H21V6H17V4C17 3.46957 16.7893 2.96086 16.4142 2.58579C16.0391 2.21071 15.5304 2 15 2H9C8.46957 2 7.96086 2.21071 7.58579 2.58579C7.21071 2.96086 7 3.46957 7 4V6H3V8H5V20ZM9 4H15V6H9V4ZM8 8H17V20H7V8H8Z" fill="black"/>
+<path d="M9 10H11V18H9V10ZM13 10H15V18H13V10Z" fill="black"/>
+</g>
+</svg>
+
+</button>
+            </li>
+        `;
+            });
+        }
+
+        addBtn.addEventListener("click", () => {
+            const task = taskInput.value.trim();
+
+            if (task === "") return;
+            tasks.push(task);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+
+            taskInput.value = "";
+
+            showTasks();
+        });
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+
+            showTasks();
+        }
+
+        showTasks();
+    </script>
+</body>
+
+</html>
